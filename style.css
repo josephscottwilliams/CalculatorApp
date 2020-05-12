@@ -1,0 +1,39 @@
+body {
+    background-color: rgb(63, 63, 63);
+}
+.navbar {
+    background-color: rgb(228, 228, 228);
+}
+button > span {
+    font-size: 2.5rem;
+}
+.output{
+    text-align: right;
+    margin: 10px;
+}
+.card-body, .card {
+    background-color: black;
+}
+h1, h3 {
+    color: white;
+}
+hr {
+    border-style: solid;
+    background-color: gray;
+}
+h1{
+    margin-top: 30px;
+    background-color: rgb(73, 73, 73);
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(119, 119, 119);
+    border-radius: 5px;
+    padding-right: 5px;
+    
+}
+.btn {
+    width: 50px;
+}
+#button-clear {
+    width: 120px;
+}

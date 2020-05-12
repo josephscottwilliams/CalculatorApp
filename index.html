@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery Calculator</title>
+
+    <!-- Added link to the jQuery Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Added a link to Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Added a link to our external stylesheet-->
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+
+      <!-- As a heading -->
+      <nav class="navbar navbar-light">
+        <span class="navbar-brand mb-0 h1">Calculator App</span>
+      </nav>
+
+
+    <div class="container" style="margin-top: 10px">
+
+            <!-- Calculator Card -->
+            <div class="col-lg-4" style="margin: 0 auto">
+                <div class="card">
+                    <h3 class="card-header">JW-20</h3>
+
+                     <h1 id="result" class="output"></h1>
+                     <hr>
+                    <div class="card-body" style="margin: 0 auto">
+                        <button id="button-1" class="btn btn-secondary number" value="1"><span>1</span></button>
+                        <button id="button-2" class="btn btn-secondary number" value="2"><span>2</span></button>
+                        <button id="button-3" class="btn btn-secondary number" value="3"><span>3</span></button>
+                        <button id="button-plus" class="btn btn-primary operator" value="plus"><span>+</span></button>
+                        <br><br>
+                        <button id="button-4" class="btn btn-secondary number" value="4"><span>4</span></button>
+                        <button id="button-5" class="btn btn-secondary number" value="5"><span>5</span></button>
+                        <button id="button-6" class="btn btn-secondary number" value="6"><span>6</span></button>
+                        <button id="button-minus" class="btn btn-primary operator"
+                            value="minus"><span>&minus;</span></button>
+                        <br><br>
+                        <button id="button-7" class="btn btn-secondary number" value="7"><span>7</span></button>
+                        <button id="button-8" class="btn btn-secondary number" value="8"><span>8</span></button>
+                        <button id="button-9" class="btn btn-secondary number" value="9"><span>9</span></button>
+                        <button id="button-multiply" class="btn btn-primary operator"
+                            value="times"><span>&times;</span></button>
+                        <br><br>
+                        <button id="button-0" class="btn btn-secondary number" value="0"><span>0</span></button>
+                        <button id="button-divide" class="btn btn-primary operator"
+                            value="divide"><span>&divide;</span></button>
+                        <button id="button-power" class="btn btn-primary operator" value="power"><span>^</span></button>
+                        <button id="button-equal" class="btn btn-warning equal" value="equals"><span>=</span></button>
+                        <br><br>
+                        <button id="button-clear" class="btn btn-dark clear" value="clear"><span>clear</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            // Global Variables -------------------------------------------------------------------------------
+
+            var numberEntered = "";
+            var result = "";
+            var Operator = "";
+            var isOperatorClicked = false;
+            var isCalculationFinished = false;
+
+            // Functions --------------------------------------------------------------------------------------
+
+            // Calculator Setup********************************************************************************
+            function calcReset() {
+                // Clear everything to start fresh (Any result or global variables being used)
+                result = "";
+                numberEntered = "";
+                Operator = "";
+                isOperatorClicked = false;
+                isCalculationFinished = false;
+
+                $("#result").empty();
+                $("#result").text("0")
+            }
+            calcReset();
+
+            // Calculator Main Proccess:
+            // User presses numbers for first digit which is stored and displayed in browser
+            // Operator is entered,
+            // The next number is entered, operator is pressed etc until total is called at = sign
+            // A running total will be kept every time an operator is pressed 
+
+
+            // Number Clicks ********************************************************************************
+
+            // * Solve Best Case Scenario *
+            // Then, Solve Special/Test Cases for Number Clicks, Operators etc:
+            // Pressing a number right after equals should essentially start a new operation
+            // 30 +, then - 3 > should yield 27
+            // Should be able to click multiple operators and only take last one to execute
+            // Default number is 0, complete functions if beginning with 0 or ""
+
+            $(".number").on("click", function () {
+
+                // What if user presses a number right after equals button?
+                if (isCalculationFinished === true && Operator === "") {
+                    calcReset();
+                    numberEntered += $(this).val();
+                    $("#result").text(numberEntered)
+                }
+                // Normal Scenario: User presses number button first
+                else if (isOperatorClicked === false) {
+                    numberEntered += $(this).val();
+                    $("#result").text(numberEntered);
+                }
+
+                // "Second Number Scenario":
+                // If (result is 0) a number is clicked, as well as operator, then another number...
+                else if (isOperatorClicked === true && result === "" & numberEntered !== "") {
+                    result = numberEntered;
+                    numberEntered = "";
+                    numberEntered += $(this).val();
+                    $("#result").text(numberEntered);
+
+                }
+                // *****SPECIAL CASE*****
+                // What if user wants to use 0 as the default value and multiply, add etc...
+                else if (isOperatorClicked === true) {
+                    numberEntered = "";
+                    numberEntered += $(this).val();
+                    $("#result").text(numberEntered);
+                }
+
+                isOperatorClicked = false;
+                isCalculationFinished = false;
+
+            })
+            // Operator Clicks ********************************************************************************
+            $(".operator").on("click", function () {
+
+                if (isOperatorClicked === true && isCalculationFinished === true) {
+                    Operator = $(this).val()
+                }
+                else {
+                    equals();
+                    Operator = $(this).val()
+                }
+
+                isOperatorClicked = true;
+            })
+
+            // Equals Clicks ********************************************************************************
+            $(".equal").on("click", function () {
+                // What if calculation is already done? (User presses equals multiple times)
+                if (isCalculationFinished === true) {
+                    $("#result").text(result.toFixed(2));
+                }
+                // What if someone entered number, then equals? (Return numberEntered, convert it to new result)
+                else if (result === "" && numberEntered !== "") {
+                    result = numberEntered;
+                    numberEntered = "";
+                }
+                // Normal scenario: User presses equals button
+                else {
+                    equals();
+                    numberEntered = "";
+                }
+            })
+
+
+            // Equals Function ********************************************************************************
+            function equals() {
+
+                // What if user presses operator/equals and nothing else?
+                // In this case we would assume that the user may want to use default zero as strter value
+                if (result === "" && numberEntered === "") {
+                    result = 0;
+                    isCalculationFinished = true;
+                    $("#result").text(result);
+                }
+                // If user enters number, and operator, but there is not an additional result to operate with:
+                else if (result === "" && numberEntered !== "") {
+                    // Probably don't want to change result until another number is entered...
+                    $("#result").text(numberEntered);
+                }
+                // What if user presses operator right after equals button?
+                else if (result !== "" && numberEntered === "") {
+                    $("#result").text(result)
+                }
+                // Normal Scenario: All Calculations must have a result and a numberEntered
+                else {
+                    numberEntered = parseFloat(numberEntered)
+                    result = parseFloat(result)
+
+                    if (Operator === "plus") {
+                        result += numberEntered
+                    }
+                    else if (Operator === "minus") {
+                        result -= numberEntered
+                    }
+                    else if (Operator === "times") {
+                        result *= numberEntered
+                    }
+                    else if (Operator === "divide") {
+                        result /= numberEntered
+                    }
+                    else if (Operator === "power") {
+                        result = Math.pow(result, numberEntered)
+                    }
+
+                    isCalculationFinished = true;
+                    Operator = "";
+                    $("#result").text(result.toFixed(2))
+                }
+            }
+            // CLEAR FUNCTION ********************************************************************************
+            $(".clear").on("click", function () {
+                calcReset();
+            })
+
+        });
+    </script>
+
+</body>
+
+</html>
