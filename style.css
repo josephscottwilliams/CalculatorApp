@@ -37,3 +37,15 @@ h1{
 #button-clear {
     width: 120px;
 }
+
+@media screen and (min-width: 250px) {
+
+    div.card{
+        margin: 10px auto;
+        width: 100%;
+    }
+    .container {
+        margin: 0 0;
+    }
+
+}
