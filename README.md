@@ -1,6 +1,8 @@
 # CalculatorApp
 https://josephscottwilliams.github.io/CalculatorApp/
 
+![](images/CalculatorScreenshot.png)
+
 ## Work in progress...  
 ### Future issues to address:
 - Make mobile responsive
